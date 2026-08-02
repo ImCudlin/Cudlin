@@ -40,12 +40,18 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 
 
 
-# Disable SvcHostSplit:
+## Disable SvcHostSplit
+
+Forces Windows to keep services grouped into shared svchost.exe processes instead of splitting each into its own process. Reduces memory footprint and process count at the cost of per-service fault/security isolation. Xbox/Xbl-related services are explicitly excluded and left split, since forcing them into shared hosts is known to cause Xbox Live/Game Bar reliability issues.
+
+**1. Raise the global split threshold** (tricks Windows into always treating the system as low-RAM):
+
 ```powershell
 Powershell -Command "Reg.exe add 'HKLM\SYSTEM\CurrentControlSet\Control' /v SvcHostSplitThresholdInKB /t REG_DWORD /d 4294967295 /f"
 ```
 
+**2. Force-disable splitting per service** (excludes Xbox/Xbl services):
 
-```batch
+```powershell
 powershell -Command "Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' | ForEach-Object { if ($_.Name -match 'Xbl|Xbox') { Remove-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -ErrorAction SilentlyContinue } else { if ($null -ne (Get-ItemProperty -Path $_.PSPath -ErrorAction SilentlyContinue).Start) { New-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -PropertyType DWord -Value 1 -Force -ErrorAction SilentlyContinue | Out-Null } } }"
 ```
