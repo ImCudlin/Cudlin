@@ -85,3 +85,47 @@ echo Press any key to Skip...
 pause >nul
 exit /b 0
 ```
+
+```batch
+@echo off
+setlocal EnableDelayedExpansion
+
+:: Disable Software Radio Device:
+:: pnputil /disable-device "SWD\RADIO\{3DB5895D-CC28-44B3-AD3D-6F01A782B8D2}" >nul 2>&1 && echo [+] Disable Software Radio Device.
+
+powershell -Command "$d='AMD PSP','AMD SMBus','Base System Device','Composite Bus Enumerator','Direct memory access controller','High precision event timer','Intel Management Engine','Intel SMBus','Legacy device','Microsoft Kernel Debug Network Adapter','Motherboard resources','Numeric Data Processor','PCI Data Acquisition and Signal Processing Controller','PCI Encryption/Decryption Controller','PCI Memory Controller','PCI Simple Communications Controller','PCI standard RAM Controller','SM Bus Controller','System CMOS/real time clock','System Speaker','System Timer'; Get-PnpDevice | Where-Object {$d -contains $_.FriendlyName} | ForEach-Object {Write-Host 'Disabling' $_.FriendlyName; Disable-PnpDevice -InstanceId $_.InstanceId -Confirm:$false -ErrorAction SilentlyContinue}"
+
+:: Disable Unused PCI_Bridges Devices:
+set "T=%TEMP%\pci%RANDOM%.txt"
+pnputil /enum-devices > "%T%" 2>nul
+set "id=" & set "p=0" & set "b=0"
+for /f "usebackq tokens=1,* delims=:" %%A in ("%T%") do (
+    set "k=%%A" & set "v=%%B" & call :trim
+    if /i "!k!"=="Instance ID" (
+        if "!b!"=="1" set "_id=!id!" & call :D
+        set "id=!v!" & set "p=0" & set "b=0"
+        set "_=!v:~0,4!" & if /i "!_!"=="PCI\" set "p=1"
+    )
+    if /i "!k!"=="Device Description" if "!p!"=="1" (
+        echo !v! | findstr /i /c:"bridge" /c:"root port" >nul 2>&1 && set "b=1"
+    )
+)
+if "!b!"=="1" set "_id=!id!" & call :D
+del "%T%" >nul 2>&1
+pnputil /scan-devices >nul 2>&1
+goto :next
+:trim
+if "!v:~0,1!"==" " set "v=!v:~1!" & goto :trim
+goto :eof
+:D
+pnputil /enum-devices /instanceid "!_id!" /relations 2>nul | findstr /i "Child" >nul 2>&1 && (
+    echo [~] Skip: !_id! & goto :eof
+)
+pnputil /disable-device "!_id!" >nul 2>&1 && echo [+] Done: !_id! || echo [-] Fail: !_id!
+goto :eof
+:next
+
+echo press any key to Skip...
+pause >nul
+```
+
