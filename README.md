@@ -54,7 +54,6 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ```powershell
 Powershell -Command "Reg.exe add 'HKLM\SYSTEM\CurrentControlSet\Control' /v SvcHostSplitThresholdInKB /t REG_DWORD /d 4294967295 /f"
 ```
-
 **2. Force-disable splitting per service** (excludes Xbox/Xbl services):
 
 ```powershell
