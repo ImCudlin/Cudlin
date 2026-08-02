@@ -41,6 +41,11 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 
 
 # Disable SvcHostSplit:
-```batch
+```powershell
 Powershell -Command "Reg.exe add 'HKLM\SYSTEM\CurrentControlSet\Control' /v SvcHostSplitThresholdInKB /t REG_DWORD /d 4294967295 /f"
+```
+
+
+```batch
+powershell -Command "Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' | ForEach-Object { if ($_.Name -match 'Xbl|Xbox') { Remove-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -ErrorAction SilentlyContinue } else { if ($null -ne (Get-ItemProperty -Path $_.PSPath -ErrorAction SilentlyContinue).Start) { New-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -PropertyType DWord -Value 1 -Force -ErrorAction SilentlyContinue | Out-Null } } }"
 ```
