@@ -18,7 +18,7 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ```
 - NetworkThrottlingIndex:
 - Network Packet Processing Rate.
-- :: 10 = Recommended. Disabling throttling may increase interrupt overhead.
+- 10 = Recommended. Disabling throttling may increase interrupt overhead.
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d "10" /f
 ```
