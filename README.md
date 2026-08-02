@@ -1,4 +1,4 @@
-# Win32PrioritySeparation
+## Win32PrioritySeparation
 - Controls thread scheduling, foreground priority boosts, and CPU quantum behavior.
 - Affects application responsiveness and MMCSS task scheduling.
 ```batch
@@ -7,7 +7,7 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32Pri
 
 
 
-# MMCSS
+## MMCSS
 - NoLazyMode:
 - It is a power saving feature however setting this to 1 it will Disable IdleDetection, and will make all your processes run at all times hence more CPU cycles.
 ```batch
@@ -54,4 +54,30 @@ Powershell -Command "Reg.exe add 'HKLM\SYSTEM\CurrentControlSet\Control' /v SvcH
 
 ```powershell
 powershell -Command "Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' | ForEach-Object { if ($_.Name -match 'Xbl|Xbox') { Remove-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -ErrorAction SilentlyContinue } else { if ($null -ne (Get-ItemProperty -Path $_.PSPath -ErrorAction SilentlyContinue).Start) { New-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -PropertyType DWord -Value 1 -Force -ErrorAction SilentlyContinue | Out-Null } } }"
+```
+
+## Disable PowerSavings For All Devices
+
+Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
+
+```batch
+@echo off
+color 07
+title Disable Power Savings For All Devices
+
+:: Disable HID Power Savings Devices
+powershell -Command Write-Host "[+] Disable HID PowerSavings Devices:" -foregroundcolor green
+for /f "delims=" %%D in ('powercfg -devicequery wake_programmable') do (
+    echo Disabling wake for: %%D
+    powercfg -devicedisablewake "%%D"
+)
+
+:: Disable Power Savings USB Input Devices
+powershell -Command Write-Host "[+] Disable Power Savings USB Input Devices:" -foregroundcolor green
+powershell -Command "Get-CimInstance -Query 'SELECT * FROM MSPower_DeviceEnable' -Namespace 'root\WMI' | ForEach-Object { $id = $_.InstanceName; if ($id.EndsWith('_0')) { $id = $id.Substring(0, $id.Length - 2) }; $dev = Get-PnpDevice -InstanceId $id -ErrorAction SilentlyContinue; $name = if ($dev.FriendlyName) { $dev.FriendlyName } else { $_.InstanceName.Split('\\')[-1] }; Write-Host \"Disabling Power Savings For: $name\"; Set-CimInstance -CimInstance $_ -Property @{Enable=$false} }"
+
+:: Exit
+echo Press any key to Skip...
+pause >nul
+exit /b 0
 ```
