@@ -15,10 +15,6 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ```
 <img width="1389" height="468" alt="image" src="https://github.com/user-attachments/assets/35dc2f67-7f82-4695-95bc-2c0dccd2506b" />
 
-
-
-
-
 - LazyModeTimeout:
 - It controls how quickly the scheduler enters idle mode however setting this to 25000 prevents premature throttling hence the lowest latency and best stability observed in NVIDIA benchmarks.
 ```batch
@@ -28,12 +24,10 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 
 ## NetworkThrottlingIndex
 - Controls the network packet processing rate throttling applied by MMCSS. Default and recommended value is `10` — disabling throttling (`0xFFFFFFFF`) may increase interrupt overhead instead of improving performance.
-
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d "10" /f
 ```
 <img width="602" height="481" alt="image" src="https://github.com/user-attachments/assets/7f9a6756-5433-41c1-b489-4c12e959f71a" />
-
 
 - SystemResponsiveness:
 - Set system responsiveness to 10%:
@@ -42,6 +36,7 @@ https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-sche
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "10" /f
 ```
+
 - Games:
 - Set the Storage I/O (SFIO) priority for the Games multimedia task to High.
 - This gives game-related multimedia tasks a higher storage I/O priority when scheduled.
@@ -53,7 +48,7 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 
 ## Disable SvcHostSplit
 
-Forces Windows to keep services grouped into shared svchost.exe processes instead of splitting each into its own process. Reduces memory footprint and process count at the cost of per-service fault/security isolation. Xbox/Xbl-related services are explicitly excluded and left split, since forcing them into shared hosts is known to cause Xbox Live/Game Bar reliability issues.
+- Forces Windows to keep services grouped into shared svchost.exe processes instead of splitting each into its own process. Reduces memory footprint and process count at the cost of per-service fault/security isolation. Xbox/Xbl-related services are explicitly excluded and left split, since forcing them into shared hosts is known to cause Xbox Live/Game Bar reliability issues.
 
 **1. Raise the global split threshold** (tricks Windows into always treating the system as low-RAM):
 
@@ -68,8 +63,7 @@ powershell -Command "Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' | F
 ```
 
 ## Disable PowerSavings For All Devices
-
-Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
+- Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
 
 ```batch
 @echo off
