@@ -29,3 +29,9 @@ https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-sche
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "10" /f
 ```
+- Games:
+- Set the Storage I/O (SFIO) priority for the Games multimedia task to High.
+- This gives game-related multimedia tasks a higher storage I/O priority when scheduled.
+```batch
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
+```
