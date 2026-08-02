@@ -19,10 +19,10 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "LazyModeTimeout" /t REG_DWORD /d "25000" /f
 ```
+<img width="1398" height="440" alt="image" src="https://github.com/user-attachments/assets/4e428560-f185-44f0-939d-740708753e7d" />
 
 ## NetworkThrottlingIndex
-
-Controls the network packet processing rate throttling applied by MMCSS. Default and recommended value is `10` — disabling throttling (`0xFFFFFFFF`) may increase interrupt overhead instead of improving performance.
+- Controls the network packet processing rate throttling applied by MMCSS. Default and recommended value is `10` — disabling throttling (`0xFFFFFFFF`) may increase interrupt overhead instead of improving performance.
 
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d "10" /f
