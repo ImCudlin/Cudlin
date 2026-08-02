@@ -13,6 +13,9 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32Pri
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NoLazyMode" /t REG_DWORD /d "0" /f
 ```
+<img width="1389" height="468" alt="image" src="https://github.com/user-attachments/assets/9320ea6e-5142-4be6-8288-d392fec3ffef" />
+
+
 
 - LazyModeTimeout:
 - It controls how quickly the scheduler enters idle mode however setting this to 25000 prevents premature throttling hence the lowest latency and best stability observed in NVIDIA benchmarks.
