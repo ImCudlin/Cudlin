@@ -6,14 +6,14 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32Pri
 ```
 
 ## MMCSS
-- NoLazyMode:
+NoLazyMode:
 - It is a power saving feature however setting this to 1 it will Disable IdleDetection, and will make all your processes run at all times hence more CPU cycles.
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NoLazyMode" /t REG_DWORD /d "0" /f
 ```
 <img width="1389" height="468" alt="image" src="https://github.com/user-attachments/assets/35dc2f67-7f82-4695-95bc-2c0dccd2506b" />
 
-- LazyModeTimeout:
+LazyModeTimeout:
 - It controls how quickly the scheduler enters idle mode however setting this to 25000 prevents premature throttling hence the lowest latency and best stability observed in NVIDIA benchmarks.
 ```batch
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "LazyModeTimeout" /t REG_DWORD /d "25000" /f
@@ -27,7 +27,7 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ```
 <img width="602" height="481" alt="image" src="https://github.com/user-attachments/assets/7f9a6756-5433-41c1-b489-4c12e959f71a" />
 
-- SystemResponsiveness:
+SystemResponsiveness:
 - Set system responsiveness to 10%:
 - Allocates less CPU resources to tasks that request it such as browsers, so that other applications will not be impacted as much.
 https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-scheduler-service#registry-settings
@@ -35,7 +35,7 @@ https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-sche
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "10" /f
 ```
 
-- Games:
+Games:
 - Set the Storage I/O (SFIO) priority for the Games multimedia task to High.
 - This gives game-related multimedia tasks a higher storage I/O priority when scheduled.
 ```batch
