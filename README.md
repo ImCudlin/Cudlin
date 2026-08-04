@@ -1,28 +1,28 @@
 ## Win32PrioritySeparation
 - Controls thread scheduling, foreground priority boosts, and CPU quantum behavior.
 - Affects application responsiveness and MMCSS task scheduling.
-```batch
+```cmd
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "38" /f
 ```
 
 ## MMCSS
 1. NoLazyMode:
 - It is a power saving feature however setting this to 1 it will Disable IdleDetection, and will make all your processes run at all times hence more CPU cycles.
-```batch
+```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NoLazyMode" /t REG_DWORD /d "0" /f
 ```
 <img width="1389" height="468" alt="image" src="https://github.com/user-attachments/assets/35dc2f67-7f82-4695-95bc-2c0dccd2506b" />
 
 2. LazyModeTimeout:
 - It controls how quickly the scheduler enters idle mode however setting this to 25000 prevents premature throttling hence the lowest latency and best stability observed in NVIDIA benchmarks.
-```batch
+```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "LazyModeTimeout" /t REG_DWORD /d "25000" /f
 ```
 <img width="1398" height="440" alt="image" src="https://github.com/user-attachments/assets/4e428560-f185-44f0-939d-740708753e7d" />
 
 3. NetworkThrottlingIndex:
 - Controls the network packet processing rate throttling applied by MMCSS. Default and recommended value is `10` — disabling throttling (`0xFFFFFFFF`) may increase interrupt overhead instead of improving performance.
-```batch
+```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d "10" /f
 ```
 <img width="602" height="481" alt="image" src="https://github.com/user-attachments/assets/7f9a6756-5433-41c1-b489-4c12e959f71a" />
@@ -31,14 +31,14 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 - Set system responsiveness to 10%:
 - Allocates less CPU resources to tasks that request it such as browsers, so that other applications will not be impacted as much.
 https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-scheduler-service#registry-settings
-```batch
+```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "10" /f
 ```
 
 5. Games:
 - Set the Storage I/O (SFIO) priority for the Games multimedia task to High.
 - This gives game-related multimedia tasks a higher storage I/O priority when scheduled.
-```batch
+```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
 ```
 
@@ -52,7 +52,7 @@ Powershell -Command "if (-not ([Security.Principal.WindowsPrincipal][Security.Pr
 ## Disable PowerSavings For All Devices
 - Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
 
-```batch
+```cmd
 @echo off
 color 07
 title Disable Power Savings For All Devices
