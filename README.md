@@ -43,7 +43,7 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ```
 
 ## Disable SvcHostSplit
-- Forces Windows to keep services grouped into shared svchost.exe processes instead of splitting each into its own process. Reduces memory footprint and process count at the cost of per-service fault/security isolation. Xbox/Xbl-related services are explicitly excluded and left split, since forcing them into shared hosts is known to cause Xbox Live/Game Bar reliability issues.
+Forces Windows to keep services grouped into shared svchost.exe processes instead of splitting each into its own process. Reduces memory footprint and process count at the cost of per-service fault/security isolation. Xbox/Xbl-related services are explicitly excluded and left split, since forcing them into shared hosts is known to cause Xbox Live/Game Bar reliability issues.
 
 - **Force-disable splitting per service** (excludes Xbox/Xbl services):
 
