@@ -68,7 +68,6 @@ for /f "delims=" %%D in ('powercfg -devicequery wake_programmable') do (
 powershell -Command Write-Host "[+] Disable Power Savings USB Input Devices:" -foregroundcolor green
 powershell -Command "Get-CimInstance -Query 'SELECT * FROM MSPower_DeviceEnable' -Namespace 'root\WMI' | ForEach-Object { $id = $_.InstanceName; if ($id.EndsWith('_0')) { $id = $id.Substring(0, $id.Length - 2) }; $dev = Get-PnpDevice -InstanceId $id -ErrorAction SilentlyContinue; $name = if ($dev.FriendlyName) { $dev.FriendlyName } else { $_.InstanceName.Split('\\')[-1] }; Write-Host \"Disabling Power Savings For: $name\"; Set-CimInstance -CimInstance $_ -Property @{Enable=$false} }"
 
-echo Press any key to Skip...
 pause >nul
 exit /b 0
 ```
