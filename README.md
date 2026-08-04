@@ -45,12 +45,7 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 ## Disable SvcHostSplit
 - Forces Windows to keep services grouped into shared svchost.exe processes instead of splitting each into its own process. Reduces memory footprint and process count at the cost of per-service fault/security isolation. Xbox/Xbl-related services are explicitly excluded and left split, since forcing them into shared hosts is known to cause Xbox Live/Game Bar reliability issues.
 
-**1. Raise the global split threshold** (tricks Windows into always treating the system as low-RAM):
-
-```powershell
-Powershell -Command "Reg.exe add 'HKLM\SYSTEM\CurrentControlSet\Control' /v SvcHostSplitThresholdInKB /t REG_DWORD /d 4294967295 /f"
-```
-**2. Force-disable splitting per service** (excludes Xbox/Xbl services):
+**- Force-disable splitting per service** (excludes Xbox/Xbl services):
 
 ```powershell
 Powershell -Command "if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { Write-Host 'ERROR: Must run as Administrator!' -ForegroundColor Red; Read-Host 'Press Enter to exit'; exit }; Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' | ForEach-Object { $svc = $_.PSChildName; if ($svc -match 'Xbl|Xbox') { Remove-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -ErrorAction SilentlyContinue; Write-Host \"[~] Excluded: $svc\" -ForegroundColor Yellow; return }; if ($null -ne (Get-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -ErrorAction SilentlyContinue)) { Write-Host \"[=] Already set: $svc\" -ForegroundColor DarkGray; return }; try { New-ItemProperty -Path $_.PSPath -Name 'SvcHostSplitDisable' -PropertyType DWord -Value 1 -Force -ErrorAction Stop | Out-Null; Write-Host \"[+] Disabled SvcHost splitting: $svc\" -ForegroundColor Green } catch { Write-Host \"[-] Skipped (protected): $svc\" -ForegroundColor Red } }; Read-Host 'Press Enter to exit'"
