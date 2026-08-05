@@ -58,3 +58,13 @@ powershell -c "Write-Host '[+] Disable HID PowerSavings Devices:' -fore green; p
 powershell -c "Write-Host '[+] Disable Power Savings USB Input Devices:' -fore green; Get-CimInstance -Namespace root\WMI -Class MSPower_DeviceEnable | %%{ $id=$_.InstanceName -replace '_0$',''; $dev=Get-PnpDevice -InstanceId $id -EA SilentlyContinue; $n=if($dev.FriendlyName){$dev.FriendlyName}else{$id}; Write-Host \"Disabling Power Savings For: $n\"; Set-CimInstance -CimInstance $_ -Property @{Enable=$false} }"
 ```
 
+## BCDedit Tweaks
+1. **Set Dual Boot Menu Timeout to 10 seconds.**
+```cmd
+bcdedit /timeout 10
+```
+2. **Use Legacy Boot Menu (Faster, text-based menu)**
+```cmd
+bcdedit /set {current} bootmenupolicy legacy
+```
+
