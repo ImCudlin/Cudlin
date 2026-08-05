@@ -53,23 +53,8 @@ Powershell -Command "if (-not ([Security.Principal.WindowsPrincipal][Security.Pr
 ## Disable PowerSavings For All Devices
 - Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
 
-```cmd
-@echo off
-color 07
-title Disable Power Savings For All Devices
-
-:: Disable HID Power Savings Devices
-powershell -Command Write-Host "[+] Disable HID PowerSavings Devices:" -foregroundcolor green
-for /f "delims=" %%D in ('powercfg -devicequery wake_programmable') do (
-    echo Disabling wake for: %%D
-    powercfg -devicedisablewake "%%D"
-)
-
-:: Disable Power Savings USB Input Devices
-powershell -Command Write-Host "[+] Disable Power Savings USB Input Devices:" -foregroundcolor green
-powershell -Command "Get-CimInstance -Query 'SELECT * FROM MSPower_DeviceEnable' -Namespace 'root\WMI' | ForEach-Object { $id = $_.InstanceName; if ($id.EndsWith('_0')) { $id = $id.Substring(0, $id.Length - 2) }; $dev = Get-PnpDevice -InstanceId $id -ErrorAction SilentlyContinue; $name = if ($dev.FriendlyName) { $dev.FriendlyName } else { $_.InstanceName.Split('\\')[-1] }; Write-Host \"Disabling Power Savings For: $name\"; Set-CimInstance -CimInstance $_ -Property @{Enable=$false} }"
-
-pause >nul
-exit /b 0
+```Powershell
+powershell -c "Write-Host '[+] Disable HID PowerSavings Devices:' -fore green; powercfg -devicequery wake_programmable | Where-Object { $_.Trim() -ne '' } | %%{ Write-Host \"Disabling wake for: $_\"; powercfg -devicedisablewake \"$_\" }"
+powershell -c "Write-Host '[+] Disable Power Savings USB Input Devices:' -fore green; Get-CimInstance -Namespace root\WMI -Class MSPower_DeviceEnable | %%{ $id=$_.InstanceName -replace '_0$',''; $dev=Get-PnpDevice -InstanceId $id -EA SilentlyContinue; $n=if($dev.FriendlyName){$dev.FriendlyName}else{$id}; Write-Host \"Disabling Power Savings For: $n\"; Set-CimInstance -CimInstance $_ -Property @{Enable=$false} }"
 ```
 
