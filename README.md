@@ -12,18 +12,21 @@ It is a power saving feature however setting this to 1 it will Disable IdleDetec
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NoLazyMode" /t REG_DWORD /d "0" /f
 ```
 <img width="1389" height="468" alt="image" src="https://github.com/user-attachments/assets/35dc2f67-7f82-4695-95bc-2c0dccd2506b" />
+
 LazyModeTimeout:
 It controls how quickly the scheduler enters idle mode however setting this to 25000 prevents premature throttling hence the lowest latency and best stability observed in NVIDIA benchmarks.
 ```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "LazyModeTimeout" /t REG_DWORD /d "25000" /f
 ```
 <img width="1398" height="440" alt="image" src="https://github.com/user-attachments/assets/4e428560-f185-44f0-939d-740708753e7d" />
+
 NetworkThrottlingIndex:
 Controls the network packet processing rate throttling applied by MMCSS. Default and recommended value is `10` — disabling throttling (`0xFFFFFFFF`) may increase interrupt overhead instead of improving performance.
 ```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d "10" /f
 ```
 <img width="602" height="481" alt="image" src="https://github.com/user-attachments/assets/7f9a6756-5433-41c1-b489-4c12e959f71a" />
+
 SystemResponsiveness:
 Set system responsiveness to 10%:
 Allocates less CPU resources to tasks that request it such as browsers, so that other applications will not be impacted as much.
@@ -31,6 +34,7 @@ https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-sche
 ```cmd
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "10" /f
 ```
+
 Games:
 Set the Storage I/O (SFIO) priority for the Games multimedia task to High.
 This gives game-related multimedia tasks a higher storage I/O priority when scheduled.
