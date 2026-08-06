@@ -51,7 +51,7 @@ Powershell -Command "if (-not ([Security.Principal.WindowsPrincipal][Security.Pr
 ```
 
 ## Disable PowerSavings For All Devices
-- Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
+Disables Windows power-management "allow this device to wake the computer" and "allow the computer to turn off this device to save power" settings across HID and USB input devices. Prevents devices (mice, keyboards, controllers) from being power-throttled or put to sleep, which can otherwise introduce input lag or wake-up delay.
 
 ```Powershell
 powershell -c "Write-Host '[+] Disable HID PowerSavings Devices:' -fore green; powercfg -devicequery wake_programmable | Where-Object { $_.Trim() -ne '' } | %%{ Write-Host \"Disabling wake for: $_\"; powercfg -devicedisablewake \"$_\" }"
