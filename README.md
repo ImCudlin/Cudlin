@@ -71,3 +71,10 @@ bcdedit /timeout 10
 bcdedit /set {current} bootmenupolicy legacy
 ```
 
+## Optimizes NTFS for performance
+1. **Disables tracking of the "last access" timestamp on files/folders,
+which avoids an extra disk write every time a file is simply read/opened.**
+```fsutil behavior set disablelastaccess 1```
+2. **Disables generation of legacy short (8.3) filenames (e.g. LONGFI~1.TXT)
+alongside long filenames, reducing filesystem overhead on file creation.**
+```fsutil behavior set disable8dot3 1```
